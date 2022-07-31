@@ -19,6 +19,11 @@ def todo_instance_to_dictionary(todo):
   
   return result
 
+class ViewWithoutCSRFAuthentication(View):
+  @method_decorator(csrf_exempt)
+  def dispatch(self, request, *args, **kwargs):
+    return super(ViewWithoutCSRFAuthentication, self).dispatch(request, *args, **kwargs)
+
 class TodoListView(View):
   def get(self, request):
     try:
@@ -32,12 +37,7 @@ class TodoListView(View):
       return JsonResponse({"msg": "Failed to get todos"}, status=404)
 
 
-class TodoCreateView(View):
-  ### CBV에서 csrf를 우회하기 위한 방법
-  @method_decorator(csrf_exempt)
-  def dispatch(self, request, *args, **kwargs):
-    return super(TodoCreateView, self).dispatch(request, *args, **kwargs)
-
+class TodoCreateView(ViewWithoutCSRFAuthentication):
   def post(self, request):
     try:
       params = json.loads(request.body)
@@ -52,13 +52,19 @@ class TodoCreateView(View):
     except:
       return JsonResponse({"msg": "Failed to create todos"}, status=404)
 
+class TodoCheckView(ViewWithoutCSRFAuthentication):
+  def patch(self, request, id):
+    try:
+      todo_instance = Todo.objects.get(id=id)
+      todo_instance.check_todo()
+      todo_dict = todo_instance_to_dictionary(todo_instance)
+      data = { "todo": todo_dict }
+      return JsonResponse(data, status=200)
+    except:
+      return JsonResponse({"msg": "Failed to create todos"}, status=404)
 
-class TodoView(View):
-    ### CBV에서 csrf를 우회하기 위한 방법
-  @method_decorator(csrf_exempt)
-  def dispatch(self, request, *args, **kwargs):
-    return super(TodoView, self).dispatch(request, *args, **kwargs)
 
+class TodoView(ViewWithoutCSRFAuthentication):
   def get(self, request, id):
     try:
       todo_instance = Todo.objects.get(id=id)
@@ -68,7 +74,7 @@ class TodoView(View):
     except:
       return JsonResponse({"msg": "Failed to edit todo"}, status=404)
 
-  def put(self, request, id):
+  def patch(self, request, id):
     try:
       params = json.loads(request.body)
     except:
@@ -87,9 +93,9 @@ class TodoView(View):
   def delete(self, request, id):
     try:
       todo_instance = Todo.objects.get(id=id)
-      todo_dict = todo_instance_to_dictionary(todo_instance)
       todo_instance.delete()
+      todo_dict = todo_instance_to_dictionary(todo_instance)
       data = { "todo": todo_dict }
-      return JsonResponse(data,status=200)
+      return JsonResponse(data, status=200)
     except:
       return JsonResponse({"msg": "Failed to delete todo"}, status=404)
