@@ -1,12 +1,9 @@
 import json
-from django.shortcuts import render
 from django.views.generic import View
 from .models import Todo
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
-
-# Create your views here.
 
 def todo_instance_to_dictionary(todo):
   """
@@ -14,9 +11,8 @@ def todo_instance_to_dictionary(todo):
   """
   result = {}
   result["id"] = todo.id
-  result["text"] = todo.text
+  result["content"] = todo.content
   result["done"] = todo.done
-  
   return result
 
 class ViewWithoutCSRFAuthentication(View):
@@ -36,11 +32,10 @@ class TodoListView(View):
     except:
       return JsonResponse({"msg": "Failed to get todos"}, status=404)
 
-
 class TodoCreateView(ViewWithoutCSRFAuthentication):
   def post(self, request):
     try:
-      params = json.loads(request.body)
+      params = json.loads(request.body) #body에서 받아온 것을 역직렬화!
     except:
       return JsonResponse({"msg": "Invalid parameters"}, status=403)
 
@@ -63,7 +58,6 @@ class TodoCheckView(ViewWithoutCSRFAuthentication):
     except:
       return JsonResponse({"msg": "Failed to create todos"}, status=404)
 
-
 class TodoView(ViewWithoutCSRFAuthentication):
   def get(self, request, id):
     try:
@@ -82,7 +76,7 @@ class TodoView(ViewWithoutCSRFAuthentication):
 
     try:
       todo_instance = Todo.objects.get(id=id)
-      todo_instance.text = params["text"]
+      todo_instance.text = params["content"]
       todo_instance.save()
       todo_dict = todo_instance_to_dictionary(todo_instance)
       data = { "todo": todo_dict }
