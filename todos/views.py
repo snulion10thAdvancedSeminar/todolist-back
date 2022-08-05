@@ -35,12 +35,12 @@ class TodoListView(View):
 class TodoCreateView(ViewWithoutCSRFAuthentication):
   def post(self, request):
     try:
-      params = json.loads(request.body) #body에서 받아온 것을 역직렬화!
+      body = json.loads(request.body) #body에서 받아온 것을 역직렬화!
     except:
       return JsonResponse({"msg": "Invalid parameters"}, status=403)
 
     try:
-      todo_instance = Todo.objects.create(text=params["text"])
+      todo_instance = Todo.objects.create(content=body["content"])
       todo_dict = todo_instance_to_dictionary(todo_instance)
       data = { "todo": todo_dict }
       return JsonResponse(data, status=200)
@@ -70,13 +70,13 @@ class TodoView(ViewWithoutCSRFAuthentication):
 
   def patch(self, request, id):
     try:
-      params = json.loads(request.body)
+      body = json.loads(request.body)
     except:
       return JsonResponse({"msg": "Invalid parameters"}, status=403)
 
     try:
       todo_instance = Todo.objects.get(id=id)
-      todo_instance.text = params["content"]
+      todo_instance.content = body["content"]
       todo_instance.save()
       todo_dict = todo_instance_to_dictionary(todo_instance)
       data = { "todo": todo_dict }
