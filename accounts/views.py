@@ -30,10 +30,7 @@ class LogoutAPIView(generics.GenericAPIView):
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
-        try : 
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
-            data = { "msg": "logout success" }
-            return JsonResponse(data, status=status.HTTP_200_OK)
-        except:
-            return JsonResponse({"msg": "bad token"}, status=status.HTTP_403_FORBIDDEN)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        data = { "msg": "logout success" }
+        return JsonResponse(data, status=status.HTTP_200_OK)
