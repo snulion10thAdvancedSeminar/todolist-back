@@ -37,15 +37,16 @@ class TodoCreateView(ViewWithoutCSRFAuthentication):
     try:
       body = json.loads(request.body) #body에서 받아온 것을 역직렬화!
     except:
-      return JsonResponse({"msg": "Invalid parameters"}, status=403)
+      return JsonResponse({"msg": "Invalid parameters"}, status=400)
 
     try:
       todo_instance = Todo.objects.create(content=body["content"])
-      todo_dict = todo_instance_to_dictionary(todo_instance)
-      data = { "todo": todo_dict }
-      return JsonResponse(data, status=200)
     except:
-      return JsonResponse({"msg": "Failed to create todos"}, status=404)
+      return JsonResponse({"msg": "Failed to create todos"}, status=400)
+
+    todo_dict = todo_instance_to_dictionary(todo_instance)
+    data = { "todo": todo_dict }
+    return JsonResponse(data, status=200)
 
 class TodoCheckView(ViewWithoutCSRFAuthentication):
   def patch(self, request, id):
@@ -56,7 +57,7 @@ class TodoCheckView(ViewWithoutCSRFAuthentication):
       data = { "todo": todo_dict }
       return JsonResponse(data, status=200)
     except:
-      return JsonResponse({"msg": "Failed to create todos"}, status=404)
+      return JsonResponse({"msg": "Failed to create todos"}, status=400)
 
 class TodoView(ViewWithoutCSRFAuthentication):
   def get(self, request, id):
@@ -72,7 +73,7 @@ class TodoView(ViewWithoutCSRFAuthentication):
     try:
       body = json.loads(request.body)
     except:
-      return JsonResponse({"msg": "Invalid parameters"}, status=403)
+      return JsonResponse({"msg": "Invalid parameters"}, status=400)
 
     try:
       todo_instance = Todo.objects.get(id=id)
