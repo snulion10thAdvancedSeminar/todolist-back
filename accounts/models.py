@@ -3,10 +3,9 @@ from django.contrib.auth.models import AbstractUser
 from rest_framework_simplejwt.tokens import RefreshToken
 
 class User(AbstractUser):
-    email = models.EmailField(max_length=255, unique=True, db_index=True)
 
     def __str__(self):
-        return self.email
+        return self.username
 
     def tokens(self):
         refresh = RefreshToken.for_user(self)

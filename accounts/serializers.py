@@ -9,10 +9,9 @@ class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(max_length=68, min_length=8, write_only=True)
     class Meta:
         model = User
-        fields = ['email', 'username', 'password']
+        fields = ['username', 'password']
     
     def validate(self, attrs):
-        email = attrs.get('email', '')
         username = attrs.get('username', '')
         if not username.isalnum():
             raise serializers.ValidationError(self.default_error_messages)
@@ -23,7 +22,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 class LoginSerializer(serializers.ModelSerializer):
     password = serializers.CharField(max_length=68, min_length=8, write_only=True)
-    username = serializers.CharField(max_length = 255, min_length=4)
+    username = serializers.CharField(max_length=255, min_length=4)
     tokens = serializers.SerializerMethodField()
 
     def get_tokens(self, obj):
@@ -48,7 +47,6 @@ class LoginSerializer(serializers.ModelSerializer):
             raise AuthenticationFailed('user not active')
 
         return {
-            'email': user.email,
             'username': user.username,
             'tokens': user.tokens
         }
