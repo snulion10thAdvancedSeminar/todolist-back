@@ -1,11 +1,5 @@
-from http import HTTPStatus
-from http.client import HTTPResponse
-from inspect import trace
-from django.shortcuts import render
-from django.http import JsonResponse
-from rest_framework import generics, serializers, status, views, permissions
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from django.conf import settings
+from rest_framework import generics, status, permissions
 from rest_framework.response import Response
 
 from .serializers import SignUpSerializer, LoginSerializer, LogoutSerializer
@@ -15,7 +9,7 @@ class SignUpAPIView(generics.GenericAPIView):
     def post(self, request):
         user = request.data
         serializer = self.serializer_class(data=user)
-        serializer.is_valid(raise_exception = True)
+        serializer.is_valid(raise_exception=True)
         serializer.save()
         data = { "msg": "user created" }
         return Response(data, status=status.HTTP_201_CREATED)
@@ -37,7 +31,8 @@ class LogoutAPIView(generics.GenericAPIView):
     serializer_class = LogoutSerializer
     permission_classes = [permissions.IsAuthenticated]
     def post(self, request):
-        serializer = self.serializer_class(data=request.data)
+        refresh_token = { "refresh" : request.COOKIES.get(settings.SIMPLE_JWT['REFRESH_TOKEN'])}
+        serializer = self.serializer_class(data = refresh_token)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         data = { "msg": "logout success" }

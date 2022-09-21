@@ -5,7 +5,7 @@ from accounts.models import User
 class Todo(models.Model): 
     text = models.TextField()
     done = models.BooleanField(default=False) 
-    author = models.ForeignKey(User, null=True, blank=True, on_delete= models.CASCADE)
+    author = models.ForeignKey(User, on_delete = models.CASCADE)
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(blank=True, null=True)
 
