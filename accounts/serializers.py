@@ -62,5 +62,6 @@ class LogoutSerializer(serializers.Serializer):
         try:
             RefreshToken(self.token).blacklist()
         except TokenError:
-            self.fail('bad token')
+            msg = 'Token is blacklisted'
+            raise serializers.ValidationError(msg, code='authorization')
     
