@@ -11,7 +11,7 @@ def todo_instance_to_dictionary(todo):
   """
   result = {}
   result["id"] = todo.id
-  result["content"] = todo.content
+  result["text"] = todo.text
   result["done"] = todo.done
   return result
 
@@ -40,7 +40,7 @@ class TodoCreateView(ViewWithoutCSRFAuthentication):
       return JsonResponse({"msg": "Invalid parameters"}, status=400)
 
     try:
-      todo_instance = Todo.objects.create(content=body["content"])
+      todo_instance = Todo.objects.create(text=body["text"])
     except:
       return JsonResponse({"msg": "Failed to create todos"}, status=400)
 
@@ -77,7 +77,7 @@ class TodoView(ViewWithoutCSRFAuthentication):
 
     try:
       todo_instance = Todo.objects.get(id=id)
-      todo_instance.content = body["content"]
+      todo_instance.text = body["text"]
       todo_instance.save()
       todo_dict = todo_instance_to_dictionary(todo_instance)
       data = { "todo": todo_dict }

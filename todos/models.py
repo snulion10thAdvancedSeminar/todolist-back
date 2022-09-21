@@ -3,7 +3,7 @@ from django.utils import timezone
 from accounts.models import User
 
 class Todo(models.Model): 
-    content = models.TextField()
+    text = models.TextField()
     done = models.BooleanField(default=False) 
     author = models.ForeignKey(User, null=True, blank=True, on_delete= models.CASCADE)
     created_at = models.DateTimeField(default=timezone.now)
@@ -18,4 +18,4 @@ class Todo(models.Model):
         self.save()
 
     def __str__(self):
-        return self.content
+        return self.text
