@@ -88,8 +88,8 @@ class TodoView(ViewWithoutCSRFAuthentication):
   def delete(self, request, id):
     try:
       todo_instance = Todo.objects.get(id=id)
-      todo_instance.delete()
       todo_dict = todo_instance_to_dictionary(todo_instance)
+      todo_instance.delete()
       data = { "todo": todo_dict }
       return JsonResponse(data, status=200)
     except:
