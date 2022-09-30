@@ -68,22 +68,6 @@ class TodoView(ViewWithoutCSRFAuthentication):
       return JsonResponse(data, status=200)
     except:
       return JsonResponse({"msg": "Failed to edit todo"}, status=404)
-
-  def patch(self, request, id):
-    try:
-      body = json.loads(request.body)
-    except:
-      return JsonResponse({"msg": "Invalid parameters"}, status=400)
-
-    try:
-      todo_instance = Todo.objects.get(id=id)
-      todo_instance.text = body["text"]
-      todo_instance.save()
-      todo_dict = todo_instance_to_dictionary(todo_instance)
-      data = { "todo": todo_dict }
-      return JsonResponse(data, status=200)
-    except:
-      return JsonResponse({"msg": "Failed to edit todo"}, status=404)
   
   def delete(self, request, id):
     try:
