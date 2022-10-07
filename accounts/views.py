@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from .serializers import SignUpSerializer, LoginSerializer, LogoutSerializer
 
 class SignUpAPIView(generics.GenericAPIView):
+    authentication_classes = []
     serializer_class = SignUpSerializer
     def post(self, request):
         user = request.data
@@ -15,6 +16,7 @@ class SignUpAPIView(generics.GenericAPIView):
         return Response(data, status=status.HTTP_201_CREATED)
 
 class LoginAPIView(generics.GenericAPIView):
+    authentication_classes = []
     serializer_class = LoginSerializer
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
