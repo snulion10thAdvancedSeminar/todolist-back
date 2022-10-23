@@ -44,7 +44,7 @@
 
 과제 구현 시 참고하면 좋은 레퍼런스
 - Account 앱 내에서 작성한 4주차 코드들
-- DRF 공식 문서: https://www.django-rest-framework.org/ (상단 API-Guide의 serializers, views, generic views, viewsets 등 참고하거나 ) 
+- DRF 공식 문서: https://www.django-rest-framework.org/ (상단 API-Guide의 serializers, views, generic views, viewsets 등 참고) 
 - **DRF API 뷰 클래스 관련 정리 블로그: https://ssungkang.tistory.com/m/entry/Django-APIView-Mixins-generics-APIView-ViewSet%EC%9D%84-%EC%95%8C%EC%95%84%EB%B3%B4%EC%9E%90**
 - 공식 문서가 제일 좋지만, 아무래도 아직 공식 문서를 살펴보는 것에 익숙하지 않다면 위의 블로그에 구현과 관련된 레퍼런스는 충분히 있다고 생각됩니다. 참고해주세요!
 
